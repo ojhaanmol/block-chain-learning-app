@@ -29,8 +29,8 @@ jobs:
       # Create environment file
       - name: Create .env file
         run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-          echo "KV_URL=${{ secrets.KV_URL }}" >> .env
+          echo "DATABASE_URL=${{ blockchain-env-secrets.DATABASE_URL }}" >> .env
+          echo "KV_URL=${{ blockchain-env-secrets.KV_URL }}" >> .env
 
       # Install dependencies
       - name: Install dependencies
