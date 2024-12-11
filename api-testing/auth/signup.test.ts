@@ -1,6 +1,7 @@
 import { describe, test, expect } from "@jest/globals";
 import axios, { AxiosError } from "axios";
 import crypto from "node:crypto";
+import { createClient, RedisClientType } from "redis";
 
 const SERVER_URL = `http://localhost:3000`;
 
@@ -182,4 +183,27 @@ describe("SIGNUP test", () => {
       console.log(error);
     }
   });
+  test("should store otp in redis",async()=>{
+    try {
+      const request = {
+        name: crypto.randomUUID(),
+        username: crypto.randomUUID(),
+        email: crypto.randomUUID() + "@somemail.com",
+        phoneNumber: "" + crypto.randomInt(1000000000, 9999999999),
+        password: crypto.randomUUID(),
+      };
+      const response = await axios.post(
+        `${SERVER_URL}/api/auth/signup`,
+        JSON.stringify({ ...request, password: "" }),
+      );
+      const redisClient = createClient()
+      await redisClient.connect();
+      const otp = await redisClient.get("otp:" + request.email);
+      await redisClient.quit();
+      expect(otp).toBeDefined();
+    } catch (error) {
+      if ( error instanceof Error )
+      console.log(error.message)
+    }
+  })
 });
