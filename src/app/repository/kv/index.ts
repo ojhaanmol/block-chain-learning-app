@@ -5,11 +5,6 @@ import { createClient } from "redis";
 export const client = createClient({ url: kvUrl });
 
 export async function storeUserPin(email: string, pin: string) {
-    try {
-        
-    } catch (error) {
-        
-    }
     await client.connect();
     await client.set( "otp:"+email, pin );
     await client.disconnect()
